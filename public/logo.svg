@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PENIZEBEZZASTAVY.CZ">
+  <polygon points="32,3 58,18 58,46 32,61 6,46 6,18" fill="#0D1B2A"/>
+  <polygon points="32,8 53.5,20.5 53.5,43.5 32,56 10.5,43.5 10.5,20.5" fill="none" stroke="#4CAF50" stroke-width="1.5"/>
+  <path d="M20 36.5 L32 24.5 L44 36.5 V48.5 H37 V41 H27 V48.5 H20 Z" fill="#ffffff"/>
+  <rect x="29.5" y="41" width="5" height="7.5" fill="#4CAF50"/>
+</svg>

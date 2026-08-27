@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# dependencies & Next.js build output
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# environment
+.env
+.env*.local
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vercel
+.vercel
