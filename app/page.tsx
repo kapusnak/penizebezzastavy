@@ -2,11 +2,13 @@ import Link from "next/link"
 import {
   ArrowRight,
   CheckCircle2,
-  Clock,
-  FileCheck,
+  FileText,
   Home,
+  Lock,
   Shield,
+  TimerReset,
   Users,
+  X,
 } from "lucide-react"
 
 import { Footer } from "@/components/footer"
@@ -27,21 +29,25 @@ const BENEFITS = [
     icon: Home,
     title: "Bez zástavy nemovitosti",
     text: "Nemovitost se nezastavuje, nezapisuje se zástavní právo.",
+    cancelled: true,
   },
   {
-    icon: FileCheck,
+    icon: FileText,
     title: "Bez zápisu do katastru",
     text: "Na list vlastnictví se nezapisuje nové zástavní právo.",
+    cancelled: true,
   },
   {
     icon: Users,
     title: "Vhodné i při spoluvlastnictví",
     text: "Nemusíte řešit souhlas dalších spoluvlastníků se zástavou.",
+    cancelled: false,
   },
   {
-    icon: Shield,
+    icon: Lock,
     title: "Diskrétní a rychlé řešení",
     text: "Individuální přístup, rychlé posouzení a rozhodnutí.",
+    cancelled: false,
   },
 ] as const
 
@@ -72,7 +78,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-background">
       <Header />
 
-      <section className="bg-white pt-28 pb-16 md:pt-32 md:pb-20">
+      <section className="bg-white pt-28 pb-10 md:pt-32 md:pb-12">
         <div className="container mx-auto grid items-center gap-10 px-4 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
           <div>
             <h1 className="font-display text-3xl leading-tight font-extrabold text-primary sm:text-4xl lg:text-5xl">
@@ -112,29 +118,49 @@ export default function HomePage() {
               alt="Moderní dům"
               className="h-[280px] w-full rounded-3xl object-cover shadow-xl sm:h-[380px] lg:h-[440px]"
             />
-            <div className="absolute right-4 bottom-4 left-4 rounded-2xl bg-primary/95 p-4 text-white shadow-lg backdrop-blur-sm sm:right-6 sm:bottom-6 sm:left-auto sm:max-w-xs">
-              <p className="text-sm leading-snug">
-                Získejte <span className="font-bold text-gold">až 300 000 Kč</span> bez zástavy nemovitosti.
-              </p>
-              <p className="mt-2 flex items-center gap-2 text-sm text-white/85">
-                <Clock className="h-4 w-4 text-gold" />
-                Peníze do 2 dnů od schválení.
-              </p>
-            </div>
+            <aside
+              className="absolute right-4 bottom-4 left-4 sm:right-6 sm:bottom-7 sm:left-auto sm:w-[17.75rem]"
+              aria-label="Klíčové parametry úvěru"
+            >
+              <div className="overflow-hidden rounded-2xl bg-primary text-white shadow-[0_22px_50px_rgba(13,27,42,0.45)] ring-1 ring-white/15">
+                <div className="px-5 pt-5 pb-4">
+                  <p className="text-[13px] font-medium text-white/90">Získejte</p>
+                  <p className="mt-1 font-display text-[1.7rem] leading-none font-extrabold tracking-tight text-gold">
+                    až 300 000 Kč
+                  </p>
+                  <p className="mt-2 text-[15px] leading-snug font-semibold">bez zástavy nemovitosti</p>
+                </div>
+                <div className="mx-5 h-px bg-white/25" />
+                <div className="flex items-center gap-3 px-5 py-4">
+                  <TimerReset className="h-8 w-8 shrink-0 text-gold" strokeWidth={1.75} aria-hidden />
+                  <p className="text-sm leading-snug">
+                    <span className="font-semibold">Peníze do 2 dnů</span>
+                    <span className="mt-0.5 block text-[13px] text-white/75">od schválení</span>
+                  </p>
+                </div>
+              </div>
+            </aside>
           </div>
         </div>
       </section>
 
-      <section id="vyhody" className="scroll-mt-28 bg-background py-16 md:py-20">
+      <section id="vyhody" className="scroll-mt-28 border-t border-border bg-white py-8 md:py-10">
         <div className="container mx-auto px-4">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-border">
             {BENEFITS.map((item) => (
-              <article key={item.title} className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent">
-                  <item.icon className="h-6 w-6" />
+              <article key={item.title} className="flex items-start gap-3 lg:px-6 first:lg:pl-0 last:lg:pr-0">
+                <span className="relative mt-0.5 inline-flex shrink-0 text-primary">
+                  <item.icon className="h-8 w-8" strokeWidth={1.5} aria-hidden />
+                  {item.cancelled ? (
+                    <span className="absolute -right-1.5 -bottom-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-white">
+                      <X className="h-2.5 w-2.5" strokeWidth={3} aria-hidden />
+                    </span>
+                  ) : null}
+                </span>
+                <div>
+                  <h2 className="font-display text-[15px] leading-snug font-bold text-primary">{item.title}</h2>
+                  <p className="mt-1 text-sm leading-snug text-primary/75">{item.text}</p>
                 </div>
-                <h2 className="font-display text-lg font-bold text-foreground">{item.title}</h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.text}</p>
               </article>
             ))}
           </div>
