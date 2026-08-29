@@ -112,17 +112,17 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative overflow-hidden rounded-3xl shadow-xl sm:overflow-visible sm:rounded-none sm:shadow-none">
             <img
               src="/hero-house.jpg"
               alt="Moderní dům"
-              className="h-[280px] w-full rounded-3xl object-cover shadow-xl sm:h-[380px] lg:h-[440px]"
+              className="h-[280px] w-full object-cover sm:h-[380px] sm:rounded-3xl sm:shadow-xl lg:h-[440px]"
             />
             <aside
-              className="absolute right-4 bottom-4 left-4 sm:right-6 sm:bottom-7 sm:left-auto sm:w-[17.75rem]"
+              className="sm:absolute sm:right-6 sm:bottom-7 sm:left-auto sm:w-[17.75rem]"
               aria-label="Klíčové parametry úvěru"
             >
-              <div className="overflow-hidden rounded-2xl bg-primary text-white shadow-[0_22px_50px_rgba(13,27,42,0.45)] ring-1 ring-white/15">
+              <div className="overflow-hidden bg-primary text-white sm:rounded-2xl sm:shadow-[0_22px_50px_rgba(13,27,42,0.45)] sm:ring-1 sm:ring-white/15">
                 <div className="px-5 pt-5 pb-4">
                   <p className="text-[13px] font-medium text-white/90">Získejte</p>
                   <p className="mt-1 font-display text-[1.7rem] leading-none font-extrabold tracking-tight text-gold">
