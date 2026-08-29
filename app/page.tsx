@@ -16,6 +16,7 @@ import { Header } from "@/components/header"
 import { LeadPopup } from "@/components/lead-popup"
 import { LoanCalculator } from "@/components/loan-calculator"
 import { ProcessSteps } from "@/components/process-steps"
+import { HERO_IMAGE } from "@/lib/site"
 
 const HERO_BULLETS = [
   "Až 300 000 Kč bez zástavy nemovitosti",
@@ -114,8 +115,10 @@ export default function HomePage() {
 
           <div className="relative">
             <img
-              src="/hero-house.jpg"
-              alt="Moderní dům"
+              src={HERO_IMAGE.src}
+              alt={HERO_IMAGE.alt}
+              width={HERO_IMAGE.width}
+              height={HERO_IMAGE.height}
               className="h-[280px] w-full rounded-3xl object-cover shadow-xl sm:h-[380px] lg:h-[440px]"
             />
             <aside

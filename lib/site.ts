@@ -17,6 +17,31 @@ export const SITE = {
   },
 } as const
 
+/** Homepage hero photograph — also used as the Open Graph / WhatsApp share image. */
+export const HERO_IMAGE = {
+  src: "/hero-house.jpg",
+  width: 1152,
+  height: 864,
+  alt: "Moderní dům",
+  type: "image/jpeg",
+} as const
+
+export function siteOriginFromEnv(): string {
+  return (process.env.NEXT_PUBLIC_SITE_URL ?? `https://${SITE.domain}`).replace(/\/$/, "")
+}
+
+/** Origin the client/crawler actually requested (so og:image is fetchable). */
+export function originFromForwardedHeaders(input: {
+  host?: string | null
+  forwardedHost?: string | null
+  forwardedProto?: string | null
+}): string | null {
+  const host = (input.forwardedHost || input.host || "").split(",")[0]?.trim()
+  if (!host) return null
+  const proto = (input.forwardedProto || "https").split(",")[0]?.trim() || "https"
+  return `${proto}://${host}`
+}
+
 /** Snapped loan slider: 50k–300k in 10k steps (same pattern as other finance webs). */
 export const LOAN_AMOUNT_RANGE = { min: 50_000, max: 300_000 } as const
 export const DEFAULT_LOAN_AMOUNT = 100_000
