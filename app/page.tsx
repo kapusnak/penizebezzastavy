@@ -1,14 +1,20 @@
+import type { ReactNode } from "react"
 import Link from "next/link"
 import {
   ArrowRight,
+  CalendarClock,
   CheckCircle2,
   FileText,
   Home,
   Lock,
   Shield,
+  ShieldCheck,
+  Target,
   TimerReset,
   Users,
+  Wallet,
   X,
+  type LucideIcon,
 } from "lucide-react"
 
 import { Footer } from "@/components/footer"
@@ -52,20 +58,62 @@ const BENEFITS = [
   },
 ] as const
 
-const PARAMS = [
-  { label: "Výše úvěru", value: "až 300 000 Kč" },
+function BanknotePlus({ className, strokeWidth = 1.5 }: { className?: string; strokeWidth?: number }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <rect width="20" height="12" x="2" y="6" rx="2" />
+      <path d="M12 9.5v5M9.5 12h5" />
+      <path d="M6 12h.01M18 12h.01" />
+    </svg>
+  )
+}
+
+const PARAMS: {
+  icon: LucideIcon | typeof BanknotePlus
+  label: string
+  value: ReactNode
+}[] = [
   {
+    icon: BanknotePlus,
+    label: "Výše úvěru",
+    value: <span className="font-bold">až 300 000 Kč</span>,
+  },
+  {
+    icon: ShieldCheck,
     label: "Zajištění",
     value: "notářský zápis se svolením k vykonatelnosti (bez zástavy nemovitosti)",
   },
   {
+    icon: Target,
     label: "Účel úvěru",
     value:
-      "variabilní dle potřeb vašeho podnikání např. investice, provoz, nákup vybavení, automobilu, nemovitosti, refinancování závazků a další",
+      "variabilní dle potřeb vašeho podnikání např. investice, provoz, nákup vybavení, automobilu, nemovitosti, refinancování závazků a další.",
   },
-  { label: "Doba splatnosti", value: "flexibilní dle dohody" },
-  { label: "Vyplacení peněz", value: "do 2 dnů od schválení" },
-] as const
+  {
+    icon: CalendarClock,
+    label: "Doba splatnosti",
+    value: <span className="font-bold">flexibilní dle dohody</span>,
+  },
+  {
+    icon: Wallet,
+    label: "Vyplacení peněz",
+    value: (
+      <>
+        <span className="font-bold">do 2 dnů</span> od schválení
+      </>
+    ),
+  },
+]
 
 const AUDIENCE = [
   "Podnikatelé a OSVČ.",
@@ -113,19 +161,19 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative overflow-hidden rounded-3xl shadow-xl sm:overflow-visible sm:rounded-none sm:shadow-none">
             <img
               src={HERO_IMAGE.src}
               alt={HERO_IMAGE.alt}
               width={HERO_IMAGE.width}
               height={HERO_IMAGE.height}
-              className="h-[280px] w-full rounded-3xl object-cover shadow-xl sm:h-[380px] lg:h-[440px]"
+              className="h-[280px] w-full object-cover sm:h-[380px] sm:rounded-3xl sm:shadow-xl lg:h-[440px]"
             />
             <aside
-              className="absolute right-4 bottom-4 left-4 sm:right-6 sm:bottom-7 sm:left-auto sm:w-[17.75rem]"
+              className="sm:absolute sm:right-6 sm:bottom-7 sm:left-auto sm:w-[17.75rem]"
               aria-label="Klíčové parametry úvěru"
             >
-              <div className="overflow-hidden rounded-2xl bg-primary text-white shadow-[0_22px_50px_rgba(13,27,42,0.45)] ring-1 ring-white/15">
+              <div className="overflow-hidden bg-primary text-white sm:rounded-2xl sm:shadow-[0_22px_50px_rgba(13,27,42,0.45)] sm:ring-1 sm:ring-white/15">
                 <div className="px-5 pt-5 pb-4">
                   <p className="text-[13px] font-medium text-white/90">Získejte</p>
                   <p className="mt-1 font-display text-[1.7rem] leading-none font-extrabold tracking-tight text-gold">
@@ -172,15 +220,21 @@ export default function HomePage() {
 
       <section id="podminky" className="scroll-mt-28 bg-white py-16 md:py-20">
         <div className="container mx-auto grid items-start gap-10 px-4 lg:grid-cols-2 lg:gap-14">
-          <div>
-            <h2 className="font-display text-2xl font-bold text-primary md:text-3xl">
-              Úvěr, který se přizpůsobí vašemu podnikání.
+          <div className="rounded-[2rem] bg-[#f3f5f7] px-7 py-9 shadow-[0_10px_40px_rgba(13,27,42,0.05)] sm:px-9 sm:py-10 md:px-11 md:py-12">
+            <h2 className="font-display text-[1.65rem] leading-snug font-bold text-primary md:text-[2rem]">
+              Úvěr, který se přizpůsobí vašemu podnikání
             </h2>
-            <dl className="mt-8 space-y-5">
+            <dl className="mt-8 grid grid-cols-[auto_1fr] gap-x-3.5 gap-y-6 sm:grid-cols-[auto_max-content_minmax(0,1fr)] sm:gap-x-5 md:mt-10 md:gap-y-7">
               {PARAMS.map((item) => (
-                <div key={item.label} className="border-b border-border pb-4 last:border-0">
-                  <dt className="text-sm font-semibold text-accent">{item.label}</dt>
-                  <dd className="mt-1 leading-relaxed text-foreground">{item.value}</dd>
+                <div
+                  key={item.label}
+                  className="col-span-2 grid grid-cols-subgrid items-start gap-y-1 sm:col-span-3"
+                >
+                  <span className="mt-0.5 inline-flex text-accent">
+                    <item.icon className="h-7 w-7" strokeWidth={1.5} aria-hidden />
+                  </span>
+                  <dt className="pr-6 font-display font-bold text-primary sm:pr-10">{item.label}</dt>
+                  <dd className="col-start-2 leading-relaxed text-primary sm:col-start-3">{item.value}</dd>
                 </div>
               ))}
             </dl>
@@ -189,7 +243,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="jak-to-funguje" className="scroll-mt-28 bg-background py-16 md:py-20">
+      <section id="jak-to-funguje" className="scroll-mt-28 bg-white py-16 md:py-20">
         <div className="container mx-auto px-4">
           <ProcessSteps />
         </div>
