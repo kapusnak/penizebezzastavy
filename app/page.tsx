@@ -1,14 +1,20 @@
+import type { ReactNode } from "react"
 import Link from "next/link"
 import {
   ArrowRight,
+  CalendarClock,
   CheckCircle2,
   FileText,
   Home,
   Lock,
   Shield,
+  ShieldCheck,
+  Target,
   TimerReset,
   Users,
+  Wallet,
   X,
+  type LucideIcon,
 } from "lucide-react"
 
 import { Footer } from "@/components/footer"
@@ -51,20 +57,61 @@ const BENEFITS = [
   },
 ] as const
 
-const PARAMS = [
-  { label: "Výše úvěru", value: "až 300 000 Kč" },
+function BanknotePlus({ className, strokeWidth = 1.5 }: { className?: string; strokeWidth?: number }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <rect width="20" height="12" x="2" y="6" rx="2" />
+      <path d="M12 9.5v5M9.5 12h5" />
+    </svg>
+  )
+}
+
+const PARAMS: {
+  icon: LucideIcon | typeof BanknotePlus
+  label: string
+  value: ReactNode
+}[] = [
   {
+    icon: BanknotePlus,
+    label: "Výše úvěru",
+    value: <span className="font-bold">až 300 000 Kč</span>,
+  },
+  {
+    icon: ShieldCheck,
     label: "Zajištění",
     value: "notářský zápis se svolením k vykonatelnosti (bez zástavy nemovitosti)",
   },
   {
+    icon: Target,
     label: "Účel úvěru",
     value:
-      "variabilní dle potřeb vašeho podnikání např. investice, provoz, nákup vybavení, automobilu, nemovitosti, refinancování závazků a další",
+      "variabilní dle potřeb vašeho podnikání např. investice, provoz, nákup vybavení, automobilu, nemovitosti, refinancování závazků a další.",
   },
-  { label: "Doba splatnosti", value: "flexibilní dle dohody" },
-  { label: "Vyplacení peněz", value: "do 2 dnů od schválení" },
-] as const
+  {
+    icon: CalendarClock,
+    label: "Doba splatnosti",
+    value: <span className="font-bold">flexibilní dle dohody</span>,
+  },
+  {
+    icon: Wallet,
+    label: "Vyplacení peněz",
+    value: (
+      <>
+        <span className="font-bold">do 2 dnů</span> od schválení
+      </>
+    ),
+  },
+]
 
 const AUDIENCE = [
   "Podnikatelé a OSVČ.",
@@ -169,15 +216,21 @@ export default function HomePage() {
 
       <section id="podminky" className="scroll-mt-28 bg-white py-16 md:py-20">
         <div className="container mx-auto grid items-start gap-10 px-4 lg:grid-cols-2 lg:gap-14">
-          <div>
-            <h2 className="font-display text-2xl font-bold text-primary md:text-3xl">
-              Úvěr, který se přizpůsobí vašemu podnikání.
+          <div className="rounded-[2rem] bg-background px-7 py-9 shadow-[0_10px_40px_rgba(13,27,42,0.05)] sm:px-9 sm:py-10 md:px-11 md:py-12">
+            <h2 className="font-display text-[1.65rem] leading-snug font-bold text-primary md:text-[2rem]">
+              Úvěr, který se přizpůsobí vašemu podnikání
             </h2>
-            <dl className="mt-8 space-y-5">
+            <dl className="mt-8 space-y-6 md:mt-10 md:space-y-7">
               {PARAMS.map((item) => (
-                <div key={item.label} className="border-b border-border pb-4 last:border-0">
-                  <dt className="text-sm font-semibold text-accent">{item.label}</dt>
-                  <dd className="mt-1 leading-relaxed text-foreground">{item.value}</dd>
+                <div
+                  key={item.label}
+                  className="grid grid-cols-[auto_1fr] items-start gap-x-3.5 gap-y-1 sm:grid-cols-[auto_11rem_minmax(0,1fr)] sm:gap-x-5"
+                >
+                  <span className="mt-0.5 inline-flex text-accent">
+                    <item.icon className="h-7 w-7" strokeWidth={1.5} aria-hidden />
+                  </span>
+                  <dt className="font-display font-bold text-primary">{item.label}</dt>
+                  <dd className="col-start-2 leading-relaxed text-primary sm:col-start-3">{item.value}</dd>
                 </div>
               ))}
             </dl>
