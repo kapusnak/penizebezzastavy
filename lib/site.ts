@@ -9,7 +9,7 @@ export const SITE = {
   phoneDisplayShort: "777 400 256",
   whatsappHref: "https://wa.me/420777400256",
   hours: "Po – Pá: 8:00 – 18:00",
-  tagline: "PODNIKATELSKÝ ÚVĚR BEZ ZÁSTAVY NEMOVITOSTI",
+  tagline: "Podnikatelský úvěr bez zástavy nemovitosti",
   controller: {
     name: "Dočasný výkup s.r.o.",
     ico: "23626836",
