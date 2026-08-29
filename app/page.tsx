@@ -240,7 +240,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="jak-to-funguje" className="scroll-mt-28 bg-background py-16 md:py-20">
+      <section id="jak-to-funguje" className="scroll-mt-28 bg-white py-16 md:py-20">
         <div className="container mx-auto px-4">
           <ProcessSteps />
         </div>
