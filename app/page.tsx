@@ -72,6 +72,7 @@ function BanknotePlus({ className, strokeWidth = 1.5 }: { className?: string; st
     >
       <rect width="20" height="12" x="2" y="6" rx="2" />
       <path d="M12 9.5v5M9.5 12h5" />
+      <path d="M6 12h.01M18 12h.01" />
     </svg>
   )
 }
@@ -216,20 +217,20 @@ export default function HomePage() {
 
       <section id="podminky" className="scroll-mt-28 bg-white py-16 md:py-20">
         <div className="container mx-auto grid items-start gap-10 px-4 lg:grid-cols-2 lg:gap-14">
-          <div className="rounded-[2rem] bg-background px-7 py-9 shadow-[0_10px_40px_rgba(13,27,42,0.05)] sm:px-9 sm:py-10 md:px-11 md:py-12">
+          <div className="rounded-[2rem] bg-[#f3f5f7] px-7 py-9 shadow-[0_10px_40px_rgba(13,27,42,0.05)] sm:px-9 sm:py-10 md:px-11 md:py-12">
             <h2 className="font-display text-[1.65rem] leading-snug font-bold text-primary md:text-[2rem]">
               Úvěr, který se přizpůsobí vašemu podnikání
             </h2>
-            <dl className="mt-8 space-y-6 md:mt-10 md:space-y-7">
+            <dl className="mt-8 grid grid-cols-[auto_1fr] gap-x-3.5 gap-y-6 sm:grid-cols-[auto_max-content_minmax(0,1fr)] sm:gap-x-5 md:mt-10 md:gap-y-7">
               {PARAMS.map((item) => (
                 <div
                   key={item.label}
-                  className="grid grid-cols-[auto_1fr] items-start gap-x-3.5 gap-y-1 sm:grid-cols-[auto_11rem_minmax(0,1fr)] sm:gap-x-5"
+                  className="col-span-2 grid grid-cols-subgrid items-start gap-y-1 sm:col-span-3"
                 >
                   <span className="mt-0.5 inline-flex text-accent">
                     <item.icon className="h-7 w-7" strokeWidth={1.5} aria-hidden />
                   </span>
-                  <dt className="font-display font-bold text-primary">{item.label}</dt>
+                  <dt className="pr-6 font-display font-bold text-primary sm:pr-10">{item.label}</dt>
                   <dd className="col-start-2 leading-relaxed text-primary sm:col-start-3">{item.value}</dd>
                 </div>
               ))}
