@@ -6,8 +6,7 @@ export type LeadParams = {
   email?: string
   name?: string
   amount?: number
-  assetType?: string
-  serviceType?: string
+  purpose?: string
   propertyAddress?: string
   /** Current path for GA (e.g. /kontakty); set for popup/cta phone leads */
   pagePath?: string
@@ -23,8 +22,7 @@ export async function sendLead(params: LeadParams): Promise<void> {
       ...(params.email != null ? { email: params.email } : {}),
       ...(params.name != null ? { name: params.name } : {}),
       ...(params.amount != null ? { amount: params.amount } : {}),
-      ...(params.assetType != null ? { assetType: params.assetType } : {}),
-      ...(params.serviceType != null ? { serviceType: params.serviceType } : {}),
+      ...(params.purpose != null ? { purpose: params.purpose } : {}),
       ...(params.propertyAddress != null ? { propertyAddress: params.propertyAddress } : {}),
       ...(params.pagePath != null ? { pagePath: params.pagePath } : {}),
     }),
