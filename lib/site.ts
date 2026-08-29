@@ -17,4 +17,46 @@ export const SITE = {
   },
 } as const
 
-export const LOAN_AMOUNTS = [50_000, 100_000, 150_000, 200_000, 250_000, 300_000] as const
+/** Snapped loan slider: 50k–300k in 10k steps (same pattern as other finance webs). */
+export const LOAN_AMOUNT_RANGE = { min: 50_000, max: 300_000 } as const
+export const DEFAULT_LOAN_AMOUNT = 100_000
+
+export const LOAN_AMOUNT_VALUES = (() => {
+  const values: number[] = []
+  for (let v = LOAN_AMOUNT_RANGE.min; v <= LOAN_AMOUNT_RANGE.max; v += 10_000) {
+    values.push(v)
+  }
+  return values
+})()
+
+export function snapToLoanAmount(value: number): number {
+  if (value <= LOAN_AMOUNT_VALUES[0]) return LOAN_AMOUNT_VALUES[0]
+  if (value >= LOAN_AMOUNT_VALUES[LOAN_AMOUNT_VALUES.length - 1]) {
+    return LOAN_AMOUNT_VALUES[LOAN_AMOUNT_VALUES.length - 1]
+  }
+  let i = 0
+  while (i < LOAN_AMOUNT_VALUES.length - 1 && LOAN_AMOUNT_VALUES[i + 1] < value) i += 1
+  const a = LOAN_AMOUNT_VALUES[i]
+  const b = LOAN_AMOUNT_VALUES[i + 1]
+  return value - a <= b - value ? a : b
+}
+
+export function loanAmountToIndex(value: number): number {
+  const snapped = snapToLoanAmount(value)
+  const idx = LOAN_AMOUNT_VALUES.indexOf(snapped)
+  return idx >= 0 ? idx : 0
+}
+
+export function formatAmountKc(value: number): string {
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(1).replace(".0", "")} mil. Kč`
+  }
+  return `${(value / 1000).toFixed(0)} tis. Kč`
+}
+
+export function formatRangeLabelKc(value: number): string {
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(0)} mil. Kč`
+  }
+  return `${(value / 1000).toFixed(0)} tis. Kč`
+}

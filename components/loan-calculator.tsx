@@ -8,15 +8,25 @@ import { ArrowRight, Lock } from "lucide-react"
 import { toast } from "sonner"
 
 import { PhoneDigitsInput } from "@/components/phone-digits-input"
+import { Slider } from "@/components/ui/slider"
+import { SliderTouchLock } from "@/components/slider-touch-lock"
 import { sendLead } from "@/lib/send-lead"
 import { toFullPhone } from "@/lib/phone-420"
-import { LOAN_AMOUNTS } from "@/lib/site"
+import {
+  DEFAULT_LOAN_AMOUNT,
+  LOAN_AMOUNT_RANGE,
+  LOAN_AMOUNT_VALUES,
+  formatAmountKc,
+  formatRangeLabelKc,
+  loanAmountToIndex,
+  snapToLoanAmount,
+} from "@/lib/site"
 
 const schema = z.object({
   name: z.string().trim().min(2, "Zadejte jméno a příjmení."),
   phoneDigits: z.string().length(9, "Zadejte platné telefonní číslo (9 číslic)."),
   email: z.string().trim().email("Zadejte platný e-mail."),
-  amount: z.coerce.number().refine((n) => (LOAN_AMOUNTS as readonly number[]).includes(n), {
+  amount: z.number().refine((n) => n >= LOAN_AMOUNT_RANGE.min && n <= LOAN_AMOUNT_RANGE.max, {
     message: "Vyberte výši úvěru.",
   }),
   purpose: z.string().trim().min(5, "Stručně uveďte účel úvěru."),
@@ -27,16 +37,14 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>
 
-function formatAmountLabel(value: number): string {
-  return `${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Kč`
-}
-
 export function LoanCalculator() {
   const {
     register,
     handleSubmit,
     control,
     reset,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -44,11 +52,15 @@ export function LoanCalculator() {
       name: "",
       phoneDigits: "",
       email: "",
-      amount: 300_000,
+      amount: snapToLoanAmount(DEFAULT_LOAN_AMOUNT),
       purpose: "",
       consent: false,
     },
   })
+
+  const amount = watch("amount")
+  const maxIdx = LOAN_AMOUNT_VALUES.length - 1
+  const valueIndex = loanAmountToIndex(amount)
 
   const onSubmit = async (values: FormValues) => {
     const phone = toFullPhone(values.phoneDigits)
@@ -63,7 +75,7 @@ export function LoanCalculator() {
         name: values.name,
         phone,
         email: values.email,
-        amount: values.amount,
+        amount: snapToLoanAmount(values.amount),
         assetType: "Podnikatelský úvěr",
         serviceType: `Podnikatelský úvěr bez zástavy — ${values.purpose}`,
       })
@@ -75,7 +87,7 @@ export function LoanCalculator() {
         name: "",
         phoneDigits: values.phoneDigits,
         email: values.email,
-        amount: values.amount,
+        amount: snapToLoanAmount(values.amount),
         purpose: "",
         consent: false,
       })
@@ -141,18 +153,40 @@ export function LoanCalculator() {
           {errors.email ? <p className="mt-1 text-xs text-red-300">{errors.email.message}</p> : null}
         </div>
 
-        <div>
-          <label htmlFor="amount" className="mb-1.5 block text-sm font-medium text-white/90">
-            Výše úvěru
-          </label>
-          <select id="amount" className={fieldClass} {...register("amount")}>
-            {LOAN_AMOUNTS.map((value) => (
-              <option key={value} value={value}>
-                {formatAmountLabel(value)}
-              </option>
-            ))}
-          </select>
-          {errors.amount ? <p className="mt-1 text-xs text-red-300">{errors.amount.message}</p> : null}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <label htmlFor="amount-slider" className="text-sm font-medium text-white/90">
+              Výše úvěru
+            </label>
+            <span className="text-base font-bold text-gold">{formatAmountKc(snapToLoanAmount(amount))}</span>
+          </div>
+          <SliderTouchLock
+            minIndex={0}
+            maxIndex={maxIdx}
+            valueIndex={valueIndex}
+            onValueChange={(i) => setValue("amount", LOAN_AMOUNT_VALUES[i])}
+          >
+            <Slider
+              id="amount-slider"
+              value={[valueIndex]}
+              onValueChange={([i]) => setValue("amount", LOAN_AMOUNT_VALUES[i])}
+              min={0}
+              max={maxIdx}
+              step={1}
+              className="w-full"
+              aria-label="Výše úvěru"
+            />
+          </SliderTouchLock>
+          <div className="flex justify-between text-xs text-white/60">
+            <span>{formatRangeLabelKc(LOAN_AMOUNT_RANGE.min)}</span>
+            <span>{formatRangeLabelKc(LOAN_AMOUNT_RANGE.max)}</span>
+          </div>
+          <Controller
+            name="amount"
+            control={control}
+            render={({ field }) => <input type="hidden" {...field} value={field.value} readOnly />}
+          />
+          {errors.amount ? <p className="text-xs text-red-300">{errors.amount.message}</p> : null}
         </div>
 
         <div>
