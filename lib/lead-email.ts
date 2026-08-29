@@ -1,3 +1,5 @@
+import { SITE as PUBLIC_SITE } from "@/lib/site"
+
 export type LeadSource = "calculator" | "popup" | "cta"
 
 export type LeadPayload = {
@@ -12,13 +14,13 @@ export type LeadPayload = {
   pagePath?: string
 }
 
-/** Brand + contact used in operator/client e-mails for this site. */
+/** Brand + contact used in operator/client e-mails — kept in sync with public site constants. */
 const SITE = {
-  domain: "penizebezzastavy.cz",
-  brandName: "Penizebezzastavy.cz",
-  contactEmail: "info@docasnyvykup.cz",
-  signOff: "Váš tým Dočasný výkup s.r.o. (Penizebezzastavy.cz)",
-  phones: [{ tel: "+420777400256", display: "+420 777 400 256" }],
+  domain: PUBLIC_SITE.domain,
+  brandName: PUBLIC_SITE.brandName,
+  contactEmail: PUBLIC_SITE.email,
+  signOff: `Váš tým ${PUBLIC_SITE.controller.name} (${PUBLIC_SITE.brandName})`,
+  phones: [{ tel: PUBLIC_SITE.phonePrimaryTel, display: PUBLIC_SITE.phonePrimary }],
 } as const
 
 const ACCENT = "#4CAF50"

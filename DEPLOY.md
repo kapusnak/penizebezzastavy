@@ -6,7 +6,7 @@
 2. `npm install`
 3. `npm run dev`
 
-Schránka je **info@docasnyvykup.cz** (From v inboxu ukáže `penizebezzastavy.cz`). Nový mailbox `info@penizebezzastavy.cz` se nezakládá.
+Schránka je **info@smartfinvest.cz** (From v inboxu ukáže `penizebezzastavy.cz`). Nový mailbox `info@penizebezzastavy.cz` se nezakládá.
 
 Bez SMTP hesla vrací `POST /api/lead` 500 — očekávané.
 
@@ -29,10 +29,10 @@ npm start   # next start -p ${PORT:-3000}
 ```
 SMTP_HOST=mail.spacemail.com
 SMTP_PORT=465
-SMTP_USER=info@docasnyvykup.cz
+SMTP_USER=info@smartfinvest.cz
 SMTP_PASS=
-LEAD_NOTIFY_TO=info@docasnyvykup.cz
-# MAIL_FROM="penizebezzastavy.cz <info@docasnyvykup.cz>"
+LEAD_NOTIFY_TO=info@smartfinvest.cz
+# MAIL_FROM="penizebezzastavy.cz <info@smartfinvest.cz>"
 ```
 
 ### Veřejné env (při buildu)
@@ -51,7 +51,7 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=
 | `_railway-verify` | TXT | hodnota z Railway |
 | `www` | CNAME | dle Railway UI |
 
-Mail DNS (MX/SPF/DKIM) pro penizebezzastavy.cz se **neřeší** — schránka je na docasnyvykup.cz.
+Mail DNS (MX/SPF/DKIM) pro penizebezzastavy.cz se **neřeší** — schránka je na smartfinvest.cz.
 
 ## Smoke test po nasazení
 
