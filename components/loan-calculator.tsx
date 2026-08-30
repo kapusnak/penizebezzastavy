@@ -30,6 +30,7 @@ const schema = z.object({
     message: "Vyberte výši úvěru.",
   }),
   purpose: z.string().trim().min(5, "Stručně uveďte účel úvěru."),
+  propertyAddress: z.string().trim(),
   consent: z.boolean().refine((value) => value === true, {
     message: "Pro odeslání je nutný souhlas se zpracováním údajů.",
   }),
@@ -54,6 +55,7 @@ export function LoanCalculator() {
       email: "",
       amount: snapToLoanAmount(DEFAULT_LOAN_AMOUNT),
       purpose: "",
+      propertyAddress: "",
       consent: false,
     },
   })
@@ -76,8 +78,10 @@ export function LoanCalculator() {
         phone,
         email: values.email,
         amount: snapToLoanAmount(values.amount),
-        assetType: "Podnikatelský úvěr",
-        serviceType: `Podnikatelský úvěr bez zástavy — ${values.purpose}`,
+        purpose: values.purpose,
+        ...(values.propertyAddress.trim()
+          ? { propertyAddress: values.propertyAddress.trim() }
+          : {}),
       })
       toast.success("Děkujeme za poptávku", {
         description: "Ozveme se vám do 30 minut v pracovní době.",
@@ -89,6 +93,7 @@ export function LoanCalculator() {
         email: values.email,
         amount: snapToLoanAmount(values.amount),
         purpose: "",
+        propertyAddress: "",
         consent: false,
       })
     } catch (e) {
@@ -200,6 +205,19 @@ export function LoanCalculator() {
             {...register("purpose")}
           />
           {errors.purpose ? <p className="mt-1 text-xs text-red-300">{errors.purpose.message}</p> : null}
+        </div>
+
+        <div>
+          <label htmlFor="propertyAddress" className="mb-1.5 block text-sm font-medium text-white/90">
+            Obec nebo adresa nemovitosti{" "}
+            <span className="font-normal text-white/60">(nepovinné)</span>
+          </label>
+          <input
+            id="propertyAddress"
+            autoComplete="street-address"
+            className={fieldClass}
+            {...register("propertyAddress")}
+          />
         </div>
 
         <label className="flex items-start gap-2.5 text-sm leading-snug text-white/85">

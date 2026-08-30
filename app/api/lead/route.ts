@@ -42,8 +42,7 @@ function parseBody(raw: unknown): LeadPayload | null {
     ...(typeof o.email === "string" ? { email: o.email } : {}),
     ...(typeof o.name === "string" ? { name: o.name } : {}),
     ...(amount != null ? { amount } : {}),
-    ...(typeof o.assetType === "string" ? { assetType: o.assetType } : {}),
-    ...(typeof o.serviceType === "string" ? { serviceType: o.serviceType } : {}),
+    ...(typeof o.purpose === "string" ? { purpose: o.purpose } : {}),
     ...(typeof o.propertyAddress === "string" ? { propertyAddress: o.propertyAddress } : {}),
     ...(typeof o.pagePath === "string" ? { pagePath: o.pagePath } : {}),
   }

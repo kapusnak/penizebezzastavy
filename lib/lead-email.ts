@@ -8,8 +8,8 @@ export type LeadPayload = {
   email?: string
   name?: string
   amount?: number
-  assetType?: string
-  serviceType?: string
+  /** Účel podnikatelského úvěru (calculator). */
+  purpose?: string
   propertyAddress?: string
   pagePath?: string
 }
@@ -18,15 +18,60 @@ export type LeadPayload = {
 const SITE = {
   domain: PUBLIC_SITE.domain,
   brandName: PUBLIC_SITE.brandName,
+  brand: PUBLIC_SITE.brand,
   contactEmail: PUBLIC_SITE.email,
   signOff: `Váš tým ${PUBLIC_SITE.controller.name} (${PUBLIC_SITE.brandName})`,
   phones: [{ tel: PUBLIC_SITE.phonePrimaryTel, display: PUBLIC_SITE.phonePrimary }],
 } as const
 
+const PRODUCT = "Podnikatelský úvěr bez zástavy nemovitosti"
 const ACCENT = "#4CAF50"
-const CALLBACK_ONLY_SERVICE = "Není relevantní (Callback)"
 const CALLBACK_ONLY_AMOUNT = "--- Pouze požadavek na zavolání ---"
 const PLACEHOLDER = "---"
+
+type PropertyDetails = {
+  product: string
+  purpose: string
+  address: string
+}
+
+function propertyDetailsFromPayload(params: LeadPayload, callback: boolean): PropertyDetails | null {
+  if (callback) return null
+  const purpose = params.purpose?.trim() ?? ""
+  const address = params.propertyAddress?.trim() ?? ""
+  return {
+    product: PRODUCT,
+    purpose: purpose || PLACEHOLDER,
+    address: address || PLACEHOLDER,
+  }
+}
+
+function propertyTextLines(property: PropertyDetails): string[] {
+  const lines = [`Typ úvěru: ${property.product}`, `Účel úvěru: ${property.purpose}`]
+  if (property.address !== PLACEHOLDER) {
+    lines.push(`Adresa nemovitosti: ${property.address}`)
+  }
+  return lines
+}
+
+function kvRow(label: string, value: string): string {
+  return `<tr>
+          <td style="padding: 5px 0; width: 45%; vertical-align: top;"><strong>${escapeHtml(label)}:</strong></td>
+          <td style="padding: 5px 0; text-align: right; font-weight: 500;">${escapeHtml(value)}</td>
+        </tr>`
+}
+
+function propertyHtmlRows(property: PropertyDetails | null): string {
+  if (!property) return ""
+  const addressRow = property.address !== PLACEHOLDER ? kvRow("Adresa nemovitosti", property.address) : ""
+  return `
+        <tr>
+          <td colspan="2" style="padding: 5px 0; border-top: 1px dashed #cccccc;"></td>
+        </tr>
+        ${kvRow("Typ úvěru", property.product)}
+        ${kvRow("Účel úvěru", property.purpose)}
+        ${addressRow}`
+}
 
 /**
  * Compact E.164-style number for `tel:` links (no spaces).
@@ -85,6 +130,13 @@ function notifyDomainTag(): string {
   return SITE.domain
 }
 
+/** Bare host, or `host/cesta` — never `host/` for the homepage. */
+function notifySourceDisplay(domainTag: string, pagePath?: string): string {
+  const path = (pagePath ?? "").trim().replace(/\/+$/, "")
+  if (!path) return domainTag
+  return `${domainTag}${path.startsWith("/") ? path : `/${path}`}`
+}
+
 function isCallbackOnly(source: LeadSource): boolean {
   return source === "cta" || source === "popup"
 }
@@ -101,16 +153,16 @@ export type BuiltLeadEmails = {
   phoneDisplay: string
 }
 
-/** Operator notification HTML. Field order: source → name → phone → email → IP → rest. */
+/** Operator notification HTML. Field order: source → name → phone → email → IP → property. */
 function buildNotifyHtml(fields: {
   source: string
   name: string
   phoneTel: string
   phoneDisplay: string
   email: string
-  serviceType: string
   amount: string
   ip: string
+  property: PropertyDetails | null
 }): string {
   const emailCell = fields.email
     ? `<a href="mailto:${escapeHtml(fields.email)}" style="color: ${ACCENT}; text-decoration: none;">${escapeHtml(fields.email)}</a>`
@@ -123,10 +175,10 @@ function buildNotifyHtml(fields: {
 <div style="font-family: system-ui, sans-serif, Arial; font-size: 14px; color: #333333; max-width: 450px; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; background-color: #ffffff;">
   <div style="display: flex; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid ${ACCENT};">
     <div style="padding: 6px 10px; background-color: #e8f5e9; border-radius: 5px; font-size: 20px; line-height: 1;">
-      <span style="color: ${ACCENT};">📩</span>
+      <span style="color: ${ACCENT};">🏠</span>
     </div>
     <div style="color: #0D1B2A; font-size: 17px; font-weight: bold; margin-left: 10px;">
-      NOVÁ POPTÁVKA K POSOUZENÍ
+      ${escapeHtml(SITE.brand)} — NOVÁ POPTÁVKA
     </div>
   </div>
   <div style="padding: 10px 0;">
@@ -152,13 +204,7 @@ function buildNotifyHtml(fields: {
           <td style="padding: 5px 0;"><strong>IP adresa:</strong></td>
           <td style="padding: 5px 0; text-align: right; font-weight: 500;">${escapeHtml(fields.ip)}</td>
         </tr>
-        <tr>
-          <td colspan="2" style="padding: 5px 0; border-top: 1px dashed #cccccc;"></td>
-        </tr>
-        <tr>
-          <td style="padding: 5px 0;"><strong>Požadovaná služba:</strong></td>
-          <td style="padding: 5px 0; text-align: right; font-weight: 500;">${escapeHtml(fields.serviceType)}</td>
-        </tr>
+        ${propertyHtmlRows(fields.property)}
       </tbody>
     </table>
   </div>
@@ -169,11 +215,11 @@ function buildNotifyHtml(fields: {
 </div>`.trim()
 }
 
-/** Client confirmation HTML — footer uses this site's brand. */
+/** Client confirmation HTML — property-loan copy only (no cars / generic dual-product). */
 function buildClientHtml(fields: {
   name: string
-  serviceType: string
   amount: string
+  property: PropertyDetails | null
 }): string {
   const phoneLines = SITE.phones
     .map(
@@ -186,7 +232,7 @@ function buildClientHtml(fields: {
   return `
 <div style="font-family: system-ui, sans-serif, Arial; font-size: 14px; color: #333333; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; background-color: #ffffff;">
   <div style="color: #0D1B2A; font-size: 20px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid ${ACCENT}; padding-bottom: 10px;">Dobrý den, děkujeme za Vaši poptávku!</div>
-  <div style="margin-bottom: 25px;">Potvrzujeme, že Vaše žádost byla úspěšně přijata. Brzy se s Vámi spojíme.</div>
+  <div style="margin-bottom: 25px;">Potvrzujeme, že jsme Vaši žádost o podnikatelský úvěr bez zástavy nemovitosti přijali. Brzy se s Vámi spojíme.</div>
   <div style="padding: 15px; background-color: #f7f7f7; border-radius: 6px; border: 1px solid #e8f5e9;">
     <div style="color: #2c3e50; font-size: 16px; font-weight: bold; margin-bottom: 10px;">SHRNUTÍ VAŠÍ ŽÁDOSTI</div>
     <table style="width: 100%; border-collapse: collapse;" role="presentation">
@@ -195,10 +241,13 @@ function buildClientHtml(fields: {
           <td style="padding: 5px 0; width: 50%;"><strong>Jméno:</strong></td>
           <td style="padding: 5px 0; text-align: right;">${escapeHtml(fields.name)}</td>
         </tr>
-        <tr>
-          <td style="padding: 5px 0;"><strong>Typ služby:</strong></td>
-          <td style="padding: 5px 0; text-align: right;">${escapeHtml(fields.serviceType)}</td>
-        </tr>
+        ${
+          fields.property
+            ? `${kvRow("Typ úvěru", fields.property.product)}
+        ${kvRow("Účel úvěru", fields.property.purpose)}
+        ${fields.property.address !== PLACEHOLDER ? kvRow("Adresa nemovitosti", fields.property.address) : ""}`
+            : ""
+        }
       </tbody>
     </table>
     <div style="margin-top: 15px; padding: 10px; background-color: #e8f5e9; border: 1px solid ${ACCENT}; border-radius: 6px; text-align: center;">
@@ -208,7 +257,8 @@ function buildClientHtml(fields: {
   </div>
   <div style="margin-top: 30px; padding: 15px; border-left: 4px solid ${ACCENT}; background-color: #f0faf4; border-radius: 4px;">
     <h3 style="color: #0D1B2A; margin-top: 0; font-size: 17px;">CO BUDE DÁL?</h3>
-    <p>Vaši poptávku posoudíme individuálně. Ozveme se vám do 30 minut v pracovní době a probereme možnosti.</p>
+    <p>Vaši poptávku posoudíme individuálně. Nemovitost se nezastavuje a do katastru se nic nezapisuje.</p>
+    <p>Ozveme se vám do 30 minut v pracovní době a probereme možnosti.</p>
     <p style="margin: 10px 0 0 0; line-height: 1.5; font-weight: normal;">Po schválení máte peníze na účtu do 2 dnů.</p>
   </div>
   <div style="margin-top: 30px; padding-top: 15px; border-top: 1px dashed #cccccc;">
@@ -228,11 +278,11 @@ function buildClientHtml(fields: {
 
 export function buildLeadEmails(params: LeadPayload & { ip: string }): BuiltLeadEmails {
   const callback = isCallbackOnly(params.source)
+  const property = propertyDetailsFromPayload(params, callback)
   const phoneTel = normalizePhoneForTel(params.phone)
   const phoneDisplay = formatPhoneDisplayForNotification(params.phone) || params.phone.trim()
   const name = callback ? PLACEHOLDER : (params.name?.trim() || PLACEHOLDER)
   const email = (params.email ?? "").trim()
-  const serviceType = callback ? CALLBACK_ONLY_SERVICE : (params.serviceType?.trim() || PLACEHOLDER)
   const amount =
     params.amount != null
       ? formatAmountCzk(params.amount)
@@ -240,13 +290,13 @@ export function buildLeadEmails(params: LeadPayload & { ip: string }): BuiltLead
         ? CALLBACK_ONLY_AMOUNT
         : PLACEHOLDER
   const ip = params.ip.trim() || "neznámá"
-  const pagePath = params.pagePath?.trim() || ""
   const domainTag = notifyDomainTag()
-  const sourceDisplay = pagePath ? `${domainTag}${pagePath}` : domainTag
+  const sourceDisplay = notifySourceDisplay(domainTag, params.pagePath)
 
+  const subjectName = params.name?.trim() || ""
   const notifySubjectCore = callback
     ? `Callback – ${phoneDisplay}`
-    : `Nová poptávka – ${name !== PLACEHOLDER ? name : phoneDisplay}`
+    : `Nová poptávka – ${subjectName || phoneDisplay}`
   const notifySubject = `[${domainTag}] ${notifySubjectCore}`
 
   const notifyText = [
@@ -255,7 +305,7 @@ export function buildLeadEmails(params: LeadPayload & { ip: string }): BuiltLead
     `Telefon: ${phoneDisplay}`,
     `E-mail: ${email || PLACEHOLDER}`,
     `IP adresa: ${ip}`,
-    `Požadovaná služba: ${serviceType}`,
+    ...(property ? propertyTextLines(property) : []),
     `Částka: ${amount}`,
   ].join("\n")
 
@@ -265,9 +315,9 @@ export function buildLeadEmails(params: LeadPayload & { ip: string }): BuiltLead
     phoneTel: phoneTel || params.phone.trim(),
     phoneDisplay,
     email,
-    serviceType,
     amount,
     ip,
+    property,
   })
 
   const clientNameForBody = callback ? PLACEHOLDER : name
@@ -276,13 +326,15 @@ export function buildLeadEmails(params: LeadPayload & { ip: string }): BuiltLead
   const clientText = [
     "Dobrý den, děkujeme za Vaši poptávku!",
     "",
-    "Potvrzujeme, že Vaše žádost byla úspěšně přijata. Brzy se s Vámi spojíme.",
+    "Potvrzujeme, že jsme Vaši žádost o podnikatelský úvěr bez zástavy nemovitosti přijali. Brzy se s Vámi spojíme.",
     "",
     `Jméno: ${clientNameForBody}`,
-    `Typ služby: ${serviceType}`,
+    ...(property ? propertyTextLines(property) : []),
     `Požadovaná částka: ${amount}`,
     "",
+    "Nemovitost se nezastavuje a do katastru se nic nezapisuje.",
     "Ozveme se vám do 30 minut v pracovní době.",
+    "Po schválení máte peníze na účtu do 2 dnů.",
     "",
     `Telefon: ${phonesText}`,
     `E-mail: ${SITE.contactEmail}`,
@@ -293,8 +345,8 @@ export function buildLeadEmails(params: LeadPayload & { ip: string }): BuiltLead
 
   const clientHtml = buildClientHtml({
     name: clientNameForBody,
-    serviceType,
     amount,
+    property,
   })
 
   return {
