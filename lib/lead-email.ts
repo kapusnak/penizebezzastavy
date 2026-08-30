@@ -113,21 +113,9 @@ function escapeHtml(value: string): string {
     .replace(/"/g, "&quot;")
 }
 
-/** Hostname for notify subject and Zdroj, e.g. `penizebezzastavy.cz`. */
+/** Brand domain for notify subject and Zdroj, e.g. `PenizeBezZastavy.cz`. */
 function notifyDomainTag(): string {
-  const origin = (process.env.NEXT_PUBLIC_SITE_URL ?? "").trim()
-  if (origin) {
-    try {
-      const host = new URL(origin.includes("://") ? origin : `https://${origin}`).hostname.replace(
-        /^www\./,
-        "",
-      )
-      if (host) return host
-    } catch {
-      /* fall through */
-    }
-  }
-  return SITE.domain
+  return SITE.brandName
 }
 
 /** Bare host, or `host/cesta` — never `host/` for the homepage. */

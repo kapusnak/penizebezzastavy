@@ -1,7 +1,7 @@
-/** Shared contact & legal constants for Penizebezzastavy.cz. */
+/** Shared contact & legal constants for PenizeBezZastavy.cz. */
 export const SITE = {
-  brand: "PENIZEBEZZASTAVY.CZ",
-  brandName: "Penizebezzastavy.cz",
+  brand: "PenizeBezZastavy.cz",
+  brandName: "PenizeBezZastavy.cz",
   domain: "penizebezzastavy.cz",
   email: "info@smartfinvest.cz",
   phonePrimary: "+420 777 400 256",

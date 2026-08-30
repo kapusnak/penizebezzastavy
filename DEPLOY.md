@@ -1,4 +1,4 @@
-# Penizebezzastavy.cz — nasazení (Railway)
+# PenizeBezZastavy.cz — nasazení (Railway)
 
 ## Lokální vývoj
 
@@ -6,7 +6,7 @@
 2. `npm install`
 3. `npm run dev`
 
-Schránka je **info@smartfinvest.cz** (From v inboxu ukáže `penizebezzastavy.cz`). Nový mailbox `info@penizebezzastavy.cz` se nezakládá.
+Schránka je **info@smartfinvest.cz** (From v inboxu ukáže `PenizeBezZastavy.cz`). Nový mailbox `info@penizebezzastavy.cz` se nezakládá.
 
 Bez SMTP hesla vrací `POST /api/lead` 500 — očekávané.
 
@@ -32,7 +32,7 @@ SMTP_PORT=465
 SMTP_USER=info@smartfinvest.cz
 SMTP_PASS=
 LEAD_NOTIFY_TO=info@smartfinvest.cz
-# MAIL_FROM="penizebezzastavy.cz <info@smartfinvest.cz>"
+# MAIL_FROM="PenizeBezZastavy.cz <info@smartfinvest.cz>"
 ```
 
 ### Veřejné env (při buildu)

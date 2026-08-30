@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer"
 import type { Transporter } from "nodemailer"
 
+import { SITE } from "@/lib/site"
+
 let transporter: Transporter | null = null
 
 function requireEnv(name: string): string {
@@ -9,25 +11,6 @@ function requireEnv(name: string): string {
     throw new Error(`Chybí proměnná prostředí ${name}.`)
   }
   return value
-}
-
-/** Hostname for From display name, e.g. penizebezzastavy.cz (not local-part "info"). */
-function fromDisplayDomain(smtpUser: string): string {
-  const origin = (process.env.NEXT_PUBLIC_SITE_URL ?? "").trim()
-  if (origin) {
-    try {
-      const host = new URL(origin.includes("://") ? origin : `https://${origin}`).hostname.replace(
-        /^www\./,
-        "",
-      )
-      if (host) return host
-    } catch {
-      /* fall through */
-    }
-  }
-  const at = smtpUser.lastIndexOf("@")
-  if (at > 0 && at < smtpUser.length - 1) return smtpUser.slice(at + 1)
-  return smtpUser
 }
 
 /** Lazy Nodemailer transport — created on first send, not at import/build time. */
@@ -54,15 +37,14 @@ export function getMailer(): Transporter {
 }
 
 /**
- * From header. Prefer MAIL_FROM; otherwise `"domain" <SMTP_USER>` so inboxes
- * show e.g. penizebezzastavy.cz instead of just "info".
+ * From header. Prefer MAIL_FROM; otherwise `"PenizeBezZastavy.cz" <SMTP_USER>`
+ * so inboxes show the brand instead of just "info".
  */
 export function mailFromAddress(): string {
   const from = process.env.MAIL_FROM?.trim()
   if (from) return from
   const user = requireEnv("SMTP_USER")
-  const domain = fromDisplayDomain(user)
-  return `"${domain}" <${user}>`
+  return `"${SITE.brand}" <${user}>`
 }
 
 export function leadNotifyTo(): string {

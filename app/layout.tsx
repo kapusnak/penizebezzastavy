@@ -18,7 +18,7 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: "swap",
 })
 
-const siteTitle = "PENIZEBEZZASTAVY.CZ — podnikatelský úvěr bez zástavy nemovitosti"
+const siteTitle = `${SITE.brand} — podnikatelský úvěr bez zástavy nemovitosti`
 const siteDescription =
   "Podnikatelský úvěr až 300 000 Kč bez zástavy nemovitosti a bez zápisu do katastru. Pro podnikatele a OSVČ. Peníze do 2 dnů od schválení."
 

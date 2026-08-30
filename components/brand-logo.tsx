@@ -1,7 +1,7 @@
 import { SITE } from "@/lib/site"
 import { cn } from "@/lib/utils"
 
-const BRAND_ACCENT = "BEZ"
+const BRAND_ACCENT = "Bez"
 
 export function BrandLogo({ className, compact = false }: { className?: string; compact?: boolean }) {
   const accentAt = SITE.brand.indexOf(BRAND_ACCENT)
