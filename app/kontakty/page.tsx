@@ -73,12 +73,12 @@ export default function KontaktyPage() {
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-6 shadow-sm lg:p-8">
-              <h2 className="font-display mb-6 text-xl font-bold text-foreground">Provozovatel</h2>
+              <h2 className="font-display mb-6 text-xl font-bold text-foreground">Fakturační údaje</h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <Building2 className="mt-0.5 h-5 w-5 text-primary" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Firma</p>
+                    <p className="text-sm text-muted-foreground">Název společnosti</p>
                     <p className="font-semibold text-foreground">{SITE.controller.name}</p>
                   </div>
                 </div>

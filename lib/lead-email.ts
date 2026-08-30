@@ -1,4 +1,4 @@
-import { SITE as PUBLIC_SITE } from "./site"
+import { SITE as PUBLIC_SITE } from "@/lib/site"
 
 export type LeadSource = "calculator" | "popup" | "cta"
 
@@ -14,7 +14,7 @@ export type LeadPayload = {
   pagePath?: string
 }
 
-/** Brand + contact used in operator/client e-mails for this site. */
+/** Brand + contact used in operator/client e-mails — kept in sync with public site constants. */
 const SITE = {
   domain: PUBLIC_SITE.domain,
   brandName: PUBLIC_SITE.brandName,

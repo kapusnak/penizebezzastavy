@@ -3,7 +3,7 @@ export const SITE = {
   brand: "PENIZEBEZZASTAVY.CZ",
   brandName: "Penizebezzastavy.cz",
   domain: "penizebezzastavy.cz",
-  email: "info@docasnyvykup.cz",
+  email: "info@smartfinvest.cz",
   phonePrimary: "+420 777 400 256",
   phonePrimaryTel: "+420777400256",
   phoneDisplayShort: "777 400 256",
@@ -11,8 +11,8 @@ export const SITE = {
   hours: "Po – Pá: 8:00 – 18:00",
   tagline: "Podnikatelský úvěr bez zástavy nemovitosti",
   controller: {
-    name: "Dočasný výkup s.r.o.",
-    ico: "23626836",
+    name: "Smart Finvest s.r.o.",
+    ico: "23627000",
     address: "Podvesná VII/6192, 760 01 Zlín",
   },
 } as const
