@@ -130,6 +130,13 @@ function notifyDomainTag(): string {
   return SITE.domain
 }
 
+/** Bare host, or `host/cesta` — never `host/` for the homepage. */
+function notifySourceDisplay(domainTag: string, pagePath?: string): string {
+  const path = (pagePath ?? "").trim().replace(/\/+$/, "")
+  if (!path) return domainTag
+  return `${domainTag}${path.startsWith("/") ? path : `/${path}`}`
+}
+
 function isCallbackOnly(source: LeadSource): boolean {
   return source === "cta" || source === "popup"
 }
@@ -283,13 +290,13 @@ export function buildLeadEmails(params: LeadPayload & { ip: string }): BuiltLead
         ? CALLBACK_ONLY_AMOUNT
         : PLACEHOLDER
   const ip = params.ip.trim() || "neznámá"
-  const pagePath = params.pagePath?.trim() || ""
   const domainTag = notifyDomainTag()
-  const sourceDisplay = pagePath ? `${domainTag}${pagePath}` : domainTag
+  const sourceDisplay = notifySourceDisplay(domainTag, params.pagePath)
 
+  const subjectName = params.name?.trim() || ""
   const notifySubjectCore = callback
     ? `Callback – ${phoneDisplay}`
-    : `Nová poptávka – ${name !== PLACEHOLDER ? name : phoneDisplay}`
+    : `Nová poptávka – ${subjectName || phoneDisplay}`
   const notifySubject = `[${domainTag}] ${notifySubjectCore}`
 
   const notifyText = [
