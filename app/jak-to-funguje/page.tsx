@@ -26,7 +26,7 @@ export default function JakToFungujePage() {
         </div>
       </section>
 
-      <section className="bg-white py-16 md:py-20">
+      <section className="bg-white py-12 md:py-14">
         <div className="container mx-auto px-4">
           <ProcessSteps heading={false} />
         </div>

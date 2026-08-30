@@ -243,24 +243,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="jak-to-funguje" className="scroll-mt-28 bg-white py-16 md:py-20">
+      <section id="jak-to-funguje" className="scroll-mt-28 bg-white py-10 md:py-12">
         <div className="container mx-auto px-4">
-          <ProcessSteps />
-        </div>
-      </section>
-
-      <section className="bg-white py-16 md:py-20">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl rounded-3xl border border-border bg-card p-8 shadow-sm md:p-10">
-            <h2 className="font-display text-2xl font-bold text-primary md:text-3xl">Komu je úvěr určen?</h2>
-            <ul className="mt-6 space-y-3">
-              {AUDIENCE.map((item) => (
-                <li key={item} className="flex items-start gap-2.5">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="grid items-center gap-7 rounded-2xl bg-[#f3f5f7] px-5 py-6 sm:px-7 sm:py-7 lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-10 lg:px-8 lg:py-7 xl:grid-cols-[minmax(0,1fr)_21rem]">
+            <ProcessSteps headingClassName="lg:text-left" />
+            <aside className="border-t border-[#d8dee4] pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
+              <h2 className="font-display text-xl font-bold text-primary md:text-[1.35rem]">Komu je úvěr určen?</h2>
+              <ul className="mt-4 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-1">
+                {AUDIENCE.map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm leading-snug text-primary">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </aside>
           </div>
         </div>
       </section>
