@@ -1,6 +1,7 @@
 import Link from "next/link"
-import { Handshake, ShieldCheck, UserRound } from "lucide-react"
+import { Handshake, Mail, Phone, ShieldCheck, UserRound } from "lucide-react"
 
+import { WhatsAppCard } from "@/components/whatsapp-card"
 import { SITE } from "@/lib/site"
 
 const VALUES = [
@@ -41,12 +42,25 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col gap-2 border-t border-white/10 pt-8 text-sm text-white/80 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6">
-          <a href={`tel:${SITE.phonePrimaryTel}`} className="font-semibold text-white hover:text-accent">
-            {SITE.phoneDisplayShort}
+        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-8 text-sm text-white/80 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-3">
+          <a
+            href={`tel:${SITE.phonePrimaryTel}`}
+            className="group inline-flex items-center gap-3 text-white hover:text-accent"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10">
+              <Phone className="h-5 w-5" />
+            </span>
+            <span className="font-semibold">{SITE.phonePrimary}</span>
           </a>
-          <a href={`mailto:${SITE.email}`} className="hover:text-accent">
-            {SITE.email}
+          <WhatsAppCard variant="dark" />
+          <a
+            href={`mailto:${SITE.email}`}
+            className="group inline-flex items-center gap-3 hover:text-accent"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white">
+              <Mail className="h-5 w-5" />
+            </span>
+            <span>{SITE.email}</span>
           </a>
           <span>{SITE.hours}</span>
         </div>
