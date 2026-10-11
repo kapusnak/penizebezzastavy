@@ -4,8 +4,8 @@ import { Plus_Jakarta_Sans } from "next/font/google"
 import { headers } from "next/headers"
 
 import { AppToaster } from "@/components/app-toaster"
+import { CookieBanner } from "@/components/cookie-banner"
 import { GoogleAdsGtag } from "@/components/google-ads-gtag"
-import { GoogleAnalytics } from "@/components/google-analytics"
 import { GoogleTagManager } from "@/components/google-tag-manager"
 import { HashScroll } from "@/components/hash-scroll"
 import { HERO_IMAGE, SITE, originFromForwardedHeaders, siteOriginFromEnv } from "@/lib/site"
@@ -91,7 +91,7 @@ export default function RootLayout({
         <GoogleAdsGtag />
         <HashScroll />
         {children}
-        <GoogleAnalytics />
+        <CookieBanner />
         <AppToaster />
       </body>
     </html>
