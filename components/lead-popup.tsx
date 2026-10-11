@@ -95,7 +95,7 @@ export function LeadPopup() {
       <div className="fixed inset-0 z-40 bg-black/25 lg:hidden" onClick={handleClose} />
 
       <div
-        className={`fixed z-50 right-0 bottom-0 left-0 max-h-[33vh] animate-slide-in-bottom rounded-t-2xl border border-white/10 bg-primary shadow-2xl lg:right-6 lg:bottom-6 lg:left-auto lg:max-h-none lg:w-[380px] lg:animate-none lg:rounded-2xl ${shouldShake ? "animate-shake" : ""}`}
+        className={`fixed z-50 right-0 bottom-[var(--pbz-cookie-offset,0px)] left-0 max-h-[33vh] animate-slide-in-bottom rounded-t-2xl border border-white/10 bg-primary shadow-2xl lg:right-6 lg:bottom-[calc(var(--pbz-cookie-offset,0px)+1.5rem)] lg:left-auto lg:max-h-none lg:w-[380px] lg:animate-none lg:rounded-2xl ${shouldShake ? "animate-shake" : ""}`}
       >
         <button
           onClick={handleClose}
